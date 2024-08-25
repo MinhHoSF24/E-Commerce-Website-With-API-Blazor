@@ -1,0 +1,144 @@
+﻿@page "/comment-client/{ProductId:int}"
+@inject ICommentService CommentService
+@inject HttpClient _http
+@using System.Text.Json;
+@using Blazored.LocalStorage;
+@using Newtonsoft.Json;
+@using Tangy_DataAccess;
+@inject ISyncLocalStorageService _localStorage
+@inject ICartService _cartService
+@inject IOrderSerivce _orderService
+@inject ILocalStorageService localStorage
+@inject NavigationManager _navi
+@inject IJSRuntime JSRuntime
+
+<div class="comment-detail">
+    <div class="container">
+        <button class="btn btn-success comment-quantity">Đánh giá (@Comments.Count)</button>
+           @foreach (var comment in Comments)
+        {
+        <div class="row comment-main">
+            <div class="col-md-4 text-center">
+                <img class="user-comment" src="/image/user-comment.png" alt="">
+            </div>
+            <div class="col-md-8 pd-32">
+                    <p>@comment.Text</p>
+                <div class="infor-user">
+                        <p>@comment.Name</p>
+                        <p>@comment.CreatedAt</p>
+                </div>
+            </div>
+        </div>
+        }
+        @if (userDetail == null)
+        {
+            <p class="text-danger">
+                Vui lòng đăng nhập để thêm Comment.
+
+            </p>
+        }
+        @if (Comments == null)
+        {
+            <p>Loading comments...</p>
+        }
+        <div class="input-comment">
+
+            <input @bind="newCommentText" type="text" placeholder="Vui lòng nhập nội dung">
+            <button @onclick="AddComment" class="btn btn-success">Gửi ngay</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+    [Parameter]
+    public List<Comment> Comments { get; set; }
+    private string newCommentText;
+    private UserDTO userDetail;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var jsonString = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserDetails");
+
+            if (!string.IsNullOrEmpty(jsonString))
+            {
+                using (JsonDocument document = JsonDocument.Parse(jsonString))
+                {
+                    userDetail = new UserDTO
+                        {
+                            Id = document.RootElement.GetProperty("Id").GetString(),
+                            Name = document.RootElement.GetProperty("Name").GetString(),
+                            Email = document.RootElement.GetProperty("Email").GetString(),
+                            PhoneNumber = document.RootElement.GetProperty("PhoneNumber").GetString()
+                        };
+
+                    Console.WriteLine("Id: " + userDetail?.Id);
+                }
+            }
+            else
+            {
+                Console.WriteLine("UserDetails not found in Local Storage.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting UserDetail from Local Storage: " + ex.Message);
+        }
+
+    }
+    private async Task AddComment()
+    {
+
+        var jsonString = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserDetails");
+        if (string.IsNullOrEmpty(jsonString))
+        {
+            _navi.NavigateTo("/login");
+            // Người dùng chưa đăng nhập, xử lý thông báo hoặc chuyển hướng đến trang đăng nhập
+            // Ví dụ: Hiển thị thông báo lỗi
+            Console.WriteLine("User is not logged in. Please log in to add a comment.");
+            return;
+        }
+
+        using (JsonDocument document = JsonDocument.Parse(jsonString))
+        {
+            userDetail = new UserDTO
+                {
+                    Id = document.RootElement.GetProperty("Id").GetString(),
+                    Name = document.RootElement.GetProperty("Name").GetString(),
+                    Email = document.RootElement.GetProperty("Email").GetString(),
+                    PhoneNumber = document.RootElement.GetProperty("PhoneNumber").GetString()
+                };
+
+            Console.WriteLine("Id: " + userDetail?.Id);
+        }
+        if (userDetail != null)
+        {
+            var comment = new Comment
+                {
+                    Text = newCommentText,
+                    UserId = userDetail.Id, // Chuyển đổi thành kiểu dữ liệu mong muốn
+                    ProductId = ProductId, // Chỉnh sửa để lấy ID sản phẩm từ trạng thái hoặc tham số URL
+                    Name = userDetail.Name ?? "Anonymous", // Thay đổi theo yêu cầu của bạn
+                };
+
+            var createdComment = await CommentService.CreateComment(comment);
+            newCommentText = "";
+            await LoadComments();
+
+            // Xử lý kết quả, có thể cập nhật danh sách comment hoặc thực hiện các hành động khác
+        }
+        else
+        {
+            // Xử lý trường hợp người dùng chưa đăng nhập (nếu cần thiết)
+        }
+     
+    }
+
+    private async Task LoadComments()
+    {
+        Comments = (await CommentService.GetCommentsByProduct(ProductId)).ToList();
+        StateHasChanged(); // Đảm bảo cập nhật giao diện người dùng
+    }
+}

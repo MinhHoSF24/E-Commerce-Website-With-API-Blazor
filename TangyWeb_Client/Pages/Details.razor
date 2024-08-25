@@ -1,0 +1,167 @@
+﻿@page "/details/{ProductId:int}"
+@using TangyWeb_Client.ViewModels;
+@using Tangy_DataAccess;
+@inject IProductService _productService
+@inject ICartService _cartService
+@inject NavigationManager _navigationManager
+@inject IJSRuntime _jsRuntime
+@inject ICommentService CommentService
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+
+
+@if (IsProcessing)
+{
+	<div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
+		<img src="image/ajax-loader.gif" />
+	</div>
+}
+else
+{
+	<EditForm OnValidSubmit="AddToCart" Model="DetailsVM" method="post">
+		<DataAnnotationsValidator />
+		<div class="body-detail">
+			<div class="intro-product">
+				<img src="/image/Product-gachchan.png" alt="">
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="text-intro">
+						<a class="nav-a-intro hover-a" href="">Trang Chủ</a>
+						<img src="/image/product-img-gachdung.png" alt="">
+						<a class="nav-a-intro" href="">Sản Phẩm</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="container pd-t-36">
+				<div class="row">
+					<div class="text-intro">
+						<a class="nav-a-intro1 hover-a" href="">@Product.Category.Name</a>
+						<img src="/image/product-img-gachdung.png" alt="">
+						<a class="nav-a-intro" href="">@Product.Name</a>
+					</div>
+				</div>
+			</div>
+			<div class="container pd-t-36">
+				<div class="row">
+					<div class="col-md-6 product-section-mid">
+						<div class="product-section">
+							<img class="product-image" src="@Product.ImageUrl" alt="">
+
+						</div>
+					</div>
+					<div class="col-md-6">
+						<h4 class="des-title">@Product.Name</h4>
+						<div class="danhgia">
+							<img src="/image/start.png" alt="">
+							<p class="daban">1226 đã bán</p>
+							<p>266 đánh giá</p>
+						</div>
+						<h6 class="text-h6">
+							@Product.Description
+						</h6>
+						@foreach (var productPrice in Product.ProductPrices)
+						{
+							if (productPrice.Id == DetailsVM.SelectedProductPriceId)
+							{
+
+								<div class="col-2 text-center pt-2 m-2 reponsive-fix" style="border-radius:10px;box-shadow:5px;width: 120px;">
+									<p hidden>@productPrice.Size</p>
+									<p style="margin-bottom: 6px;text-align: left;margin-left: -9px; font-weight: 700;">@productPrice.Price Vnđ</p>
+
+								</div>
+							}
+							else
+							{
+
+								<div class="col-2 bg-light text-center pt-2 m-2 reponsive-fix" style="border:1px solid; border-radius:10px;box-shadow:5px"
+								@onclick="(args)=>SelectedProductPrice(args,productPrice.Id)">
+									<p hidden>@productPrice.Size</p>
+									<p>@productPrice.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</p>
+								</div>
+							}
+						}
+						@if (!Product.ProductPrices.Any())
+						{
+							<p class="text-warning">No Size avaible yet...</p>
+						}
+						else
+						{
+							<p>
+								Số lượng: <InputNumber @bind-Value="DetailsVM.Count" type="number" style="outline: none;border: none; border-radius: 7px;padding: 0px 0px;width: 50px;text-align: center;" />
+								<ValidationMessage For="()=> DetailsVM.Count"></ValidationMessage>
+							</p>
+						}
+						@if (DetailsVM.SelectedProductPriceId > 0)
+						{
+							<button type="submit" class="btn btn-light button-them">
+								Thêm vào giỏ
+							</button>
+						}
+						else
+						{
+							<button type="button" disabled class="btn btn-light button-them">
+								Thêm vào giỏ
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</EditForm>
+
+	<CommentClient Comments="comments" ProductId="@ProductId"></CommentClient>
+	<Footer></Footer>
+}
+@code {
+	[Parameter]
+	public int ProductId { get; set; }
+
+	public ProductDTO Product { get; set; } = new();
+
+	public bool IsProcessing { get; set; } = false;
+
+	private List<Comment> comments = new List<Comment>();
+	public DetailsVM DetailsVM { get; set; } = new();
+	protected override async Task OnInitializedAsync()
+	{
+		IsProcessing = true;
+		Product = await _productService.Get(ProductId);
+		comments = (await CommentService.GetCommentsByProduct(ProductId)).ToList();
+		if (Product.ProductPrices.Any())
+		{
+			DetailsVM.ProductPrice = Product.ProductPrices.First();
+			DetailsVM.SelectedProductPriceId = DetailsVM.ProductPrice.Id;
+		}
+
+		IsProcessing = false;
+	}
+	public async Task SelectedProductPrice(MouseEventArgs e, int productPriceId)
+	{
+		DetailsVM.ProductPrice = Product.ProductPrices.FirstOrDefault(u => u.Id == productPriceId);
+		DetailsVM.SelectedProductPriceId = productPriceId;
+	}
+	private async Task AddToCart()
+	{
+		if (DetailsVM != null && DetailsVM.ProductPrice != null)
+		{
+			ShoppingCart shoppingCart = new()
+				{
+					Count = DetailsVM.Count,
+					ProductId = ProductId,
+					ProductPriceId = DetailsVM.SelectedProductPriceId
+				};
+
+			await _cartService.InCrementCart(shoppingCart);
+
+			_navigationManager.NavigateTo("product");
+			await _jsRuntime.ToastrSuccess("Sản phẩm đã được thêm vào giỏ hàng thành công");
+		}
+		else
+		{
+			await _jsRuntime.ToastrError("Sản phẩm đã được thêm vào giỏ hàng không thành công");
+		}
+	}
+}

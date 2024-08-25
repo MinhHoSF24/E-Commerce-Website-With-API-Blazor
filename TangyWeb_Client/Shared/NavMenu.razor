@@ -1,0 +1,260 @@
+﻿@using Blazored.LocalStorage;
+@using System.Text.Json;
+@using Tangy_DataAccess;
+@using Newtonsoft.Json;
+@implements IDisposable
+@inject ISyncLocalStorageService _localStorage
+@inject ICartService _cartService
+@inject IOrderSerivce _orderService
+@inject ILocalStorageService localStorage
+@inject NavigationManager _navi
+@inject IJSRuntime JSRuntime
+<style>
+    #user-dropdown .dropdown-menu {
+        display: none;
+    }
+
+    #user-dropdown.show .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-menu{
+        padding-left: 14px;
+        background: #ccc;
+      
+        margin: -10px;
+        margin-left: 22px;
+    }
+
+    .dropdown-menu  a{
+            line-height: 32px;
+        color: #7e3131;
+    }
+
+    .hover-infor :hover{
+        opacity:0.6;
+    }
+    .cursor{
+        cursor:pointer;
+    }
+</style>
+<div class="header">
+    <div class="sub-menu">
+        <div class="container">
+            <div class="row mid-css">
+                <div class="col col-md-2 ">
+                    <a class="text-white" href="">Hotline</a>
+                </div>
+                <div class="col col-md-2 icon-communicate">
+                    <a href="">
+                        <img src="/image/Vector.png" />
+                    </a>
+                    <a href="">
+                        <img src="/image/instagram.png" />
+                    </a>
+                    <a href="">
+                        <img src="/image/mail.png" />
+                    </a>
+                    <a href="">
+                        <img src="/image/phone.png" />
+                    </a>
+                </div>
+                <div class="col col-md-4">
+                    <a href="">
+                        <img src="/image/logo.png" alt="">
+                    </a>
+                </div>
+                   <AuthorizeView>
+                <Authorized>
+                        <div class="col col-md-2 taikhoan-css" id="user-dropdown">
+                            <a href="#"   aria-expanded="false">
+                                <img src="/image/user.png" alt="">
+                                <p class="text-white">Tài Khoản</p>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="hover-infor cursor"><a @onclick="ChangePassword" style="color: #7e3131;">Đổi mật khẩu</a></li>
+                                <li class="hover-infor"><a href="logout">Đăng Xuất</a></li>
+                                <!-- Thêm các mục khác cần thiết vào đây -->
+                            </ul>
+                        </div>
+                </Authorized>
+                 <NotAuthorized>
+                        <div class="col col-md-2 taikhoan-css" id="user-dropdown">
+                            <a href="#" aria-expanded="false">
+                                <img src="/image/user.png" alt="">
+                                <p class="text-white">Tài Khoản</p>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="hover-infor"><a href="login">Đăng Nhập</a></li>
+                                <li class="hover-infor"><a href="register">Đăng Ký</a></li>
+                                <!-- Thêm các mục khác cần thiết vào đây -->
+                            </ul>
+                        </div>
+                     </NotAuthorized>
+                   </AuthorizeView>
+                <div class="col col-md-2">
+                    <a class="text-white" href="">EN/VI</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="menu">
+        <div class="container">
+            <div class="row mid-css pading-menu text-left m-l-60">
+                <div class="col col-md-2">
+                    <a class="color-285430" href="">Trang chủ</a>
+                </div>
+                <div class="col col-md-2">
+                    <a href="product" class="color-1F1C17">Sản phẩm</a>
+                </div>
+                 <AuthorizeView>
+                  <Authorized>
+                <div class="col col-md-2">
+                <a class="color-1F1C17" @onclick="NavigateToOrderDetails2" style="cursor:pointer;">Lịch sử</a>
+                </div>
+                 </Authorized>
+                    <NotAuthorized>
+                          <div class="col col-md-2">
+                        <a class="color-1F1C17" href="login">Lịch sử</a>
+                        </div>
+                  </NotAuthorized>
+                </AuthorizeView>
+                <div class="col col-md-2">
+                    <a class="cart-css" href="cart">
+                        <img src="/image/shopping-bag.png" alt="">
+                       @* <span>@GetCartCount()</span>*@
+                    </a>
+                </div>
+                <div class="col col-md-2 mid-css dis-flex">
+                    <input class="input-search" type="text" placeholder="Tìm kiếm sản phẩm">
+                    <div class="icon-search dis-flex mg-l35">
+                        <img class="gach-css" src="/image/gachdung.png" alt="">
+                        <img class="icon-search-css" src="/image/search.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="reponsive-menu">
+        <div class="container mid-css-mobi mobi-bars">
+            <img class="cursor" src="/image/logo.png" alt="">
+            <label for="nav-mobile-input">
+                <i class="fa-solid fa-bars icon-bar"></i>
+            </label>
+            <input hidden type="checkbox" class="nav__input" id="nav-mobile-input">
+            <label for="nav-mobile-input" class="nav__overlay"></label>
+            <div class="nav__mobile">
+                <label for="nav-mobile-input" class="nav_close">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                </label>
+                <ul class="nav__list">
+                    <li>
+                        <a class="nav__link cart-css color-285430" href="/">Trang chủ</a>
+                    </li>
+                    <li>
+                        <a href="product" class="nav__link cart-css">Sản phẩm</a>
+                    </li>
+                    <AuthorizeView>
+                        <Authorized>
+                    <li>
+                                <a class="nav__link cart-css m-l--10px" @onclick="NavigateToOrderDetails2">Lịch sử</a>
+                    </li>
+                            <li>
+                                <a class="nav__link cart-css" @onclick="ChangePassword">Đổi mật khẩu</a>
+                            </li>
+                            <li>
+                                <a class="nav__link cart-css" href="logout">Đăng xuất</a>
+                            </li>
+                      </Authorized>
+                      <NotAuthorized>
+                            <li>
+                                <a class="nav__link cart-css m-l--10px" href="login">Lịch sử</a>
+                            </li>
+                            <li>
+                                <a class="nav__link cart-css m-l--10px" href="login">Đăng nhập</a>
+                            </li>
+                            <li>
+                                <a class="nav__link cart-css m-l--10px" href="register">Đăng ký</a>
+                            </li>
+                      </NotAuthorized>
+                </AuthorizeView>
+                    <li>
+                        <a class="nav__link cart-css" href="cart">
+                            <img src="/image/shopping-bag.png" alt="">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="reponsive-menu-sub">
+        <div class="mid-css dis-flex">
+            <input class="input-search" type="text" placeholder="Tìm kiếm sản phẩm">
+            <div class="icon-search dis-flex mg-l35">
+                <img class="gach-css" src="/image/gachdung.png" alt="">
+                <img class="icon-search-css" src="/image/search.png" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+    private UserDTO userDetail;
+    protected override async Task OnInitializedAsync()
+    {
+        _cartService.OnChange += StateHasChanged;
+        try
+        {
+            var jsonString = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "UserDetails");
+
+            if (!string.IsNullOrEmpty(jsonString))
+            {
+                using (JsonDocument document = JsonDocument.Parse(jsonString))
+                {
+                    userDetail = new UserDTO
+                        {
+                            Id = document.RootElement.GetProperty("Id").GetString(),
+                            Name = document.RootElement.GetProperty("Name").GetString(),
+                            Email = document.RootElement.GetProperty("Email").GetString(),
+                            PhoneNumber = document.RootElement.GetProperty("PhoneNumber").GetString()
+                        };
+
+                    Console.WriteLine("Id: " + userDetail?.Id);
+                }
+            }
+            else
+            {
+                Console.WriteLine("UserDetails not found in Local Storage.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting UserDetail from Local Storage: " + ex.Message);
+        }
+     
+
+    }
+
+    //private void NavigateToOrderDetails()
+    //{
+    //    _navi.NavigateTo($"/orderdetails/{userDetail.Id}");
+    //}
+    private void NavigateToOrderDetails2()
+    {
+        _navi.NavigateTo($"/orderdetails/{userDetail.Id}");
+    }
+    private void ChangePassword()
+    {
+        _navi.NavigateTo($"/changepassword/{userDetail.Id}");
+    }
+    public void Dispose()
+    {
+        _cartService.OnChange -= StateHasChanged;
+    }
+    private int GetCartCount()
+    {
+        var cart = _localStorage.GetItem<List<ShoppingCart>>(SD.ShoppingCart);
+        return cart == null ? 0 : cart.Count;
+    }
+}

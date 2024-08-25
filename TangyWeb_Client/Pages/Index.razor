@@ -1,0 +1,151 @@
+﻿@page "/"
+@using TangyWeb_Client.Service.IService;
+@using Tangy_Models;
+@inject HttpClient http
+@inject IProductService _productService
+@using Blazorise
+@using Blazorise.Bootstrap
+<PageTitle>Gia Dụng Điện Tử</PageTitle>
+@*<link href="css/app.css" rel="stylesheet" />*@
+<style>
+
+
+</style>
+
+@if (IsProcessing)
+{
+    <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
+        <img src="image/ajax-loader.gif" />
+    </div>
+}
+else
+{
+    <div class="background-slider">
+        <img class="img-botmau" src="/image/backgroudbotmau.png" alt="">
+        <h1 class="h1-slider">100% Nguyên Liệu Từ Thiên Nhiên</h1>
+        <h1 class="h1-slider1">Bột Rau Củ Sấy Lạnh</h1>
+        <h4 class="h4-slider">
+            Với sự kết hợp độc đáo của nhiều loại rau củ, bột của chúng tôi mang đến một nguồn cung cấp đa dạng dưỡng chất.
+        </h4>
+        <a href="product" class="btn btn-success button-slider">
+            Xem Thêm
+        </a>
+    </div>
+    <div class="section-intro">
+        <div class="container">
+            <div class="row center-2att p-50-0">
+                <div class="col col-md-6 mg-l-22">
+                    <h3 class="section-intro-h3">Tiện Lợi & Dễ Sử Dụng</h3>
+                    <p class="section-intro-p">
+                        Không còn nỗi lo về việc giữ tươi mới cho rau củ trong tủ lạnh.
+                        Bạn chỉ cần một lượng nhỏ bột rau củ tinh khiết để thêm hương vị
+                        và dưỡng chất vào mọi bữa ăn. Đơn giản, tiện lợi giúp bạn tiết kiệm thời gian,
+                        và thực sự hiệu quả.
+                    </p>
+                </div>
+                <div class="col col-md-3 col-xs-6 w-240">
+                    <img class="h-371" src="/image/botmatcha.png" alt="">
+                </div>
+                <div class="col col-md-3 mobi-none">
+                    <img class="h-371 m-t-54" src="/image/botmaucampng.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-type">
+        <img class="img-type" src="/image/cacloaibot.png" alt="">
+        <div class="h3-div">
+            <h3 class="type-h3">Chúng tôi tin rằng bột rau củ tinh khiết sẽ là sự bổ sung hoàn hảo cho chế độ <br> ăn lành mạnh của bạn.</h3>
+        </div>
+    </div>
+
+    <div class="section-end">
+        <div class="end-text">
+            <h2>
+                Tự Nhiên và Không Chứa Chất Bảo Quản
+            </h2>
+            <p>
+                Bột rau củ tinh khiết của chúng tôi được chế biến một cách tự nhiên,
+                giữ lại tất cả các dưỡng chất quan trọng <br> của rau củ mà không có bất kỳ chất phụ
+                gia nào.
+            </p>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col col-md-4  col-sm-12 end-bot">
+                    <img src="/image/Botnghe.png" alt="">
+                    <h3>Bột Nghệ</h3>
+                    <p>
+                        Có khả năng làm sáng da và giảm tình trạng da mụn.
+                        Chất chống ô nhiễm của curcumin có trong bột nghệ có thể giúp bảo vệ da
+                        khỏi tác động có hại từ môi trường.
+                    </p>
+                </div>
+                <div class="col col-md-4  col-sm-12 end-bot">
+                    <img src="/image/Bottraxanh.png" alt="">
+                    <h3>Bột Trà Xanh</h3>
+                    <p>
+                        Bột trà xanh chứa nhiều chất chống oxi hóa, chủ yếu là catechins,
+                        giúp ngăn chặn sự hủy hoại của gốc tự do trong cơ thể và bảo vệ tế bào khỏi tổn thương.
+
+                    </p>
+                </div>
+                <div class="col col-md-4  col-sm-12 end-bot">
+                    <img src="/image/botcarot.png" alt="">
+                    <h3>Bột Cà Rốt</h3>
+                    <p>
+                        Beta-carotene có trong cà rốt được chuyển hóa thành vitamin A trong cơ thể,
+                        giúp duy trì sức khỏe mắt và tăng cường tầm nhìn.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <Footer></Footer>
+
+    }
+@code {
+    public bool IsProcessing { get; set; } = false;
+    public IEnumerable<ProductDTO> Products { get; set; } = new List<ProductDTO>();
+    private string searchQuery;
+  
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsProcessing = true;
+            Products = await _productService.GetAll();
+        }
+        catch (Exception ex)
+        {
+            // Xử lý ngoại lệ ở đây (ví dụ: ghi log, hiển thị thông báo lỗi)
+            Console.WriteLine($"Lỗi trong quá trình tải dữ liệu: {ex.Message}");
+        }
+        finally
+        {
+            IsProcessing = false;
+        }
+    }
+    private async Task PerformSearch()
+    {
+        try
+        {
+            IsProcessing = true;
+            Products = await _productService.Search(searchQuery);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine($"Error during search: {ex.Message}");
+        }
+        finally
+        {
+            IsProcessing = false;
+        }
+    }
+       
+}
+
+

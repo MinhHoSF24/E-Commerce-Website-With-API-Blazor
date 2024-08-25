@@ -1,0 +1,168 @@
+﻿
+
+
+/* Xong css Header */
+.body-detail {
+    background-color: #FEFBF4;
+}
+
+.intro-product img {
+    width: 100%;
+}
+
+.nav-a-intro {
+    color: #285430;
+}
+
+.nav-a-intro1 {
+    color: #1F1C17;
+}
+
+.nav-a-intro:hover {
+    color: #285430;
+    opacity: 0.6;
+}
+
+.pd-t-36 {
+    padding-top: 36px;
+}
+
+.nav-a-intro {
+    color: #285430;
+}
+
+.img-cart-sum {
+    cursor: pointer;
+    color: #285430;
+    margin-left: 4px;
+}
+
+.summary-sanpham {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 16px
+}
+
+.w-15 {
+    width: 26%;
+}
+
+.name-productsummary {
+    font-size: 14px;
+    width: 50%;
+    margin-top: 12px;
+    margin-left: 6px;
+}
+
+.quantity-summary {
+    margin-top: 12px;
+    margin-left: -16px;
+}
+
+.name-productimg {
+    display: flex;
+}
+
+.tamtinh-summary p {
+    text-align: right;
+    margin-right: -26px;
+    margin-top: 12px;
+    font-weight: 700;
+}
+
+.sp-text {
+    font-weight: 700;
+}
+
+.tong-summary {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 16px;
+}
+
+.p-tong {
+    font-weight: 700;
+}
+
+.p-price {
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+.btn-tieptuc {
+    padding: 4px 12px;
+    outline: none;
+    border: 1px solid #ccc;
+    background: #285430;
+    color: #ffffff;
+    border-radius: 12px;
+}
+
+.p-b-26 {
+    padding-bottom: 26px;
+}
+
+.summary-product-buy {
+    padding-bottom: 16px;
+}
+
+.fill-infor {
+    border: 1px solid #1F1C17;
+    background: #1F1C17;
+    border-radius: 20px;
+    padding: 10px 12px
+}
+
+    .fill-infor h6 {
+        color: #fff;
+        padding-left: 18px;
+    }
+
+.fill-input {
+    padding: 10px 4px;
+}
+
+.fill-input-input {
+    width: 100%;
+    margin-bottom: 8px;
+    border-radius: 22px;
+    padding: 8px 18px;
+    color: #888888;
+}
+
+.total-summary {
+    text-align: right;
+    padding-right: 28px;
+}
+
+    .total-summary p {
+        color: #FEFBF4;
+    }
+
+.price-total {
+    color: #285430;
+}
+
+.btn-thanhtoan {
+    padding: 4px 12px;
+    outline: none;
+    border: 1px solid #282525;
+    background: #285430;
+    color: #ffffff;
+    border-radius: 12px;
+}
+
+.button-thanhtoan {
+    text-align: center;
+    padding-bottom: 24px;
+}
+
+.pd-bt-48 {
+    padding-bottom: 48px;
+}
+
+@media (max-width: 768px) {
+    .button-tieptuc {
+        padding-bottom: 24px;
+    }
+}

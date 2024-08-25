@@ -1,0 +1,223 @@
+﻿/* Xong css Header */
+.body-detail {
+    background-color: #FEFBF4;
+}
+
+.intro-product img {
+    width: 100%;
+}
+
+.nav-a-intro {
+    color: #285430;
+}
+
+.nav-a-intro1 {
+    color: #1F1C17;
+}
+
+.nav-a-intro:hover {
+    color: #285430;
+    opacity: 0.6;
+}
+
+.pd-t-36 {
+    padding-top: 36px;
+}
+
+.content-product {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 36px;
+}
+
+.content-intro {
+    display: flex;
+    align-items: center;
+}
+
+.status-product {
+    display: flex;
+    align-items: center;
+}
+
+.content-intro button {
+    margin-left: 18px;
+    margin-top: -5px;
+    padding: 3px 14px;
+    font-weight: 700;
+}
+
+.status-product {
+    font-size: 16px;
+}
+
+    .status-product p {
+        margin-bottom: 7px;
+        margin-left: 8px;
+        color: #285430;
+    }
+
+.w-100 {
+    width: 100%;
+}
+
+.product-history {
+    display: flex;
+    padding-top: 32px;
+}
+
+.text-history {
+    margin-left: 42px;
+    margin-top: 42px;
+}
+
+.w-18 {
+    width: 18%;
+}
+
+.text-history .name {
+    color: #1F1C17;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.text-history .category {
+    margin-bottom: 0px;
+}
+
+.quantity {
+    margin-bottom: 8px;
+}
+
+.price {
+    color: #1F1C17;
+    font-weight: 700;
+}
+
+.custom-table {
+    border: 1px solid #285430;
+}
+
+    /* Đặt màu cho border của thead */
+    .custom-table thead th {
+        border: 1px solid #285430;
+        height: 45px;
+        color: #285430;
+        padding-left: 20px;
+    }
+
+    .custom-table thead .diachi {
+        width: 50%;
+    }
+    /* Đặt màu cho border của tbody */
+    .custom-table tbody td {
+        border: 1px solid #285430;
+        height: 100px;
+        padding-left: 20px;
+    }
+
+.totalprice {
+    margin-right: 52px;
+    text-align: right;
+    font-weight: 700;
+}
+
+.tong {
+    margin-bottom: 4px;
+    margin-right: 10px;
+}
+
+.thanhtien-price {
+    text-align: right;
+    font-weight: 700
+}
+
+.price-span {
+    color: #285430;
+}
+
+.voucher {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 36px;
+    padding-bottom: 36px;
+}
+
+.btn-danhgia {
+    padding: 2px 32px;
+    border: 1px solid #285430;
+    outline: none;
+    background: none;
+    border-radius: 8px;
+    color: #285430;
+    margin-right: 12px;
+}
+
+.btn-mualai {
+    padding: 2px 32px;
+    border: 1px solid #285430;
+    outline: none;
+    background: #285430;
+    border-radius: 8px;
+    color: #fff;
+}
+
+@media (max-width: 992px) {
+    .content-intro h5 {
+        font-size: 12px;
+    }
+
+    .content-intro button {
+        margin-left: 18px;
+        margin-top: -6px;
+        padding: 1px 7px;
+    }
+
+    .status-product h5 {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-product {
+        display: inline;
+    }
+
+    .btn-mualai {
+        margin-top: 8px;
+        padding: 2px 38px;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .status-product p {
+        margin-bottom: 5px;
+        margin-left: 8px;
+    }
+
+    .status-product h5 {
+        font-size: 14px;
+    }
+
+    .w-18 {
+        width: 40%;
+        height: 62%;
+    }
+
+    .text-history {
+        margin-top: 0px;
+    }
+}
+
+
+@media (max-width: 350px) {
+    .btn-danhgia {
+        padding: 2px 32px;
+    }
+
+    .btn-mualai {
+        padding: 10px 26px;
+    }
+}

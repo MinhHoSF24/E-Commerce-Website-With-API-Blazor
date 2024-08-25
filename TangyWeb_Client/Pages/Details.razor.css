@@ -1,0 +1,182 @@
+﻿.body-detail {
+    background-color: #FEFBF4;
+}
+
+.intro-product img {
+    width: 100%;
+}
+
+.nav-a-intro {
+    color: #285430;
+}
+
+.nav-a-intro1 {
+    color: #1F1C17;
+}
+
+.nav-a-intro:hover {
+    color: #285430;
+    opacity: 0.6;
+}
+
+.pd-t-36 {
+    padding-top: 36px;
+}
+
+.product-section {
+    border: 2px solid #285430;
+    width: 88%;
+    border-radius: 30px;
+    padding-left: 20px;
+    padding-bottom: 12px;
+    padding-right: 10px;
+}
+
+.pd-t-32 {
+    padding-top: 32px;
+}
+
+.product-image {
+    width: 100%;
+    margin-left: -4px;
+}
+
+.product-section-mid {
+    display: flex;
+    padding-bottom: 32px;
+}
+
+.des-title {
+    color: #1F1C17;
+    padding-top: 24px;
+    font-weight: 600;
+    margin-left: -9px;
+}
+
+.danhgia {
+    display: flex;
+    padding-top: 8px;
+}
+
+    .danhgia img {
+        width: 15%;
+        height: 22px;
+        margin-right: 20px;
+    }
+
+.daban {
+    margin-right: 20px;
+}
+
+.text-h6 {
+    color: #1F1C17;
+    width: 70%;
+    text-align: justify;
+    padding-top: 6px;
+}
+
+.price-detail {
+    color: #000000;
+    font-weight: 800;
+    padding-top: 12px;
+}
+
+.soluong {
+    padding-bottom: 6px;
+}
+
+.button-them {
+    border: 2px solid #285430;
+    color: #285430;
+}
+
+.comment-main {
+    border: 1px solid #285430;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.comment-quantity {
+    margin-bottom: 24px;
+}
+
+.user-comment {
+    padding-top: 12px;
+}
+
+.infor-user {
+    display: flex;
+}
+
+    .infor-user p {
+        text-align: left;
+        margin-right: 12px;
+        margin-bottom: 6px;
+    }
+
+.pd-32 {
+    padding-top: 38px;
+}
+
+.input-comment {
+    padding-bottom: 24px;
+}
+
+    .input-comment input {
+        padding-top: 14px;
+        width: 85%;
+        padding-bottom: 14px;
+        border: 2px solid #285430;
+        padding-left: 19px;
+        font-size: 20px;
+        margin-left: -12px;
+    }
+
+    .input-comment button {
+        margin-left: -12px;
+        padding: 18px 42px;
+        margin-top: -9px;
+    }
+
+.comment-detail {
+    padding-top: 36px;
+}
+
+@media (max-width: 1024px) {
+    .input-comment {
+        text-align: center;
+    }
+
+        .input-comment input {
+            padding-top: 10px;
+            width: 65%;
+            padding-bottom: 10px;
+        }
+
+        .input-comment button {
+            padding: 14px 42px;
+        }
+}
+
+@media (max-width: 400px) {
+    .input-comment input {
+        padding-top: 4px;
+        width: 50%;
+        padding-bottom: 4px;
+        font-size: 14px;
+        padding-left: 0;
+    }
+
+    .input-comment button {
+        padding: 4px 22px;
+        margin-top: -3px;
+    }
+}
+
+h4 {
+    background: none;
+}
